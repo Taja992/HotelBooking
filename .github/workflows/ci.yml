@@ -1,95 +1,45 @@
-name: CI
+# This workflow will build the HotelBooking solution and perform a Sonar scan
+# with code coverage using Coverlet, for every commit and pull request.
+
+name: BuildTestAndStaticAnalysis
 
 on:
   push:
-    branches: [main]
+    branches: [ "main" ]
   pull_request:
-    branches: [main]
+    branches: [ "main" ]
 
 jobs:
-  build-test-analyze:
-    name: Build, Test & SonarQube Analysis
+  build-test-static-analysis:
     runs-on: ubuntu-latest
-
-    services:
-      sonarqube:
-        image: sonarqube:community
-        ports:
-          - 9000:9000
-        options: >-
-          --health-cmd "curl -sf http://localhost:9000/api/system/status | grep -q '\"status\":\"UP\"'"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 30
-          --health-start-period 60s
+    env:
+      TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 17
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 10.0.x
 
-      - name: Set up .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '10.0.x'
+    - name: Install Coverlet
+      run: dotnet tool install --global coverlet.console
+    - name: Install sonarscanner
+      run: dotnet tool install --global dotnet-sonarscanner
 
-      - name: Cache dotnet-sonarscanner tool
-        uses: actions/cache@v4
-        with:
-          path: ~/.dotnet/tools
-          key: ${{ runner.os }}-sonar-scanner-net10
+    - name: Begin Sonar scan
+      run: dotnet sonarscanner begin /k:"Taja992_HotelBooking" /o:"taja992" /d:sonar.token="$TOKEN" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths=coverage.xml
 
-      - name: Install SonarQube scanner
-        run: dotnet tool install --global dotnet-sonarscanner
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore --configuration Debug
 
-      - name: Restore dependencies
-        run: dotnet restore HotelBooking.sln
+    - name: Collect code coverage using Coverlet
+      run: coverlet ./HotelBooking.UnitTests/bin/Debug/HotelBooking.UnitTests.dll --target "dotnet" --targetargs "test HotelBooking.UnitTests --no-build" -f=opencover -o="coverage.xml"
 
-      - name: Generate SonarQube token
-        id: sonar-token
-        run: |
-          TOKEN=$(curl -s -u admin:admin -X POST \
-            "http://localhost:9000/api/user_tokens/generate" \
-            -d "name=ci-$GITHUB_RUN_ID" | jq -r .token)
-          echo "::add-mask::$TOKEN"
-          echo "token=$TOKEN" >> "$GITHUB_OUTPUT"
-
-      - name: Begin SonarQube analysis
-        run: >
-          dotnet sonarscanner begin
-          /k:"HotelBooking"
-          /d:sonar.token="${{ steps.sonar-token.outputs.token }}"
-          /d:sonar.host.url="http://localhost:9000"
-          /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
-          /d:sonar.cs.vstest.reportsPaths="**/*.trx"
-
-      - name: Build
-        run: dotnet build HotelBooking.sln --configuration Release --no-restore
-
-      - name: Run unit tests with coverage
-        run: >
-          dotnet test HotelBooking.UnitTests/HotelBooking.UnitTests.csproj
-          --configuration Release
-          --no-build
-          --logger "trx"
-          --collect:"XPlat Code Coverage"
-          --results-directory ./TestResults
-          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
-
-      - name: Run integration tests
-        run: >
-          dotnet test HotelBooking.IntegrationTests/HotelBooking.IntegrationTests.csproj
-          --configuration Release
-          --no-build
-          --logger "trx"
-          --results-directory ./TestResults
-
-      - name: End SonarQube analysis
-        run: dotnet sonarscanner end /d:sonar.token="${{ steps.sonar-token.outputs.token }}"
+    - name: End Sonar scan
+      run: dotnet sonarscanner end /d:sonar.token="$TOKEN"
