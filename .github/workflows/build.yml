@@ -1,47 +1,66 @@
-name: SonarQube
+# Builds the solution, runs unit + integration tests with coverage,
+# and performs static analysis on SonarQube Cloud.
+
+name: BuildTestAndStaticAnalysis
+
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
   pull_request:
-    types: [opened, synchronize, reopened]
+    branches: [ "main" ]
+
 jobs:
-  build:
-    name: Build and analyze
-    runs-on: windows-latest
+  build-test-static-analysis:
+    name: Build, Test & Static Analysis
+    runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
     steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0  # Shallow clones reduce the relevancy of analysis
+
       - name: Set up JDK 21
-        uses: actions/setup-java@c1e323688fd81a25caa38c78aa6df2d33d3e20d9 # v4.8.0
+        uses: actions/setup-java@v4
         with:
+          distribution: 'zulu'
           java-version: 21
-          distribution: 'zulu' # Alternative distribution options are available.
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Cache SonarQube Cloud packages
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
-        with:
-          path: ~\sonar\cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      - name: Cache SonarQube Cloud scanner
-        id: cache-sonar-scanner
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
-        with:
-          path: ${{ runner.temp }}\scanner
-          key: ${{ runner.os }}-sonar-scanner
-          restore-keys: ${{ runner.os }}-sonar-scanner
-      - name: Install SonarQube Cloud scanner
-        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-        shell: powershell
-        run: |
-          New-Item -Path ${{ runner.temp }}\scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path ${{ runner.temp }}\scanner
-      - name: Build and analyze
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: powershell
-        run: |
-          ${{ runner.temp }}\scanner\dotnet-sonarscanner begin /k:"Taja992_HotelBooking" /o:"taja992" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-          dotnet build
-          ${{ runner.temp }}\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          dotnet-version: 10.0.x
+
+      - name: Install sonarscanner
+        run: dotnet tool install --global dotnet-sonarscanner
+
+      - name: Begin Sonar scan
+        run: >
+          dotnet sonarscanner begin
+          /k:"Taja992_HotelBooking"
+          /o:"taja992"
+          /d:sonar.token="$SONAR_TOKEN"
+          /d:sonar.host.url="https://sonarcloud.io"
+          /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
+          /d:sonar.cs.vstest.reportsPaths="**/*.trx"
+
+      - name: Restore dependencies
+        run: dotnet restore HotelBooking.sln
+
+      - name: Build
+        run: dotnet build HotelBooking.sln --no-restore --configuration Debug
+
+      - name: Test with coverage
+        run: >
+          dotnet test HotelBooking.sln
+          --no-build
+          --configuration Debug
+          --logger "trx"
+          --results-directory ./TestResults
+          --collect:"XPlat Code Coverage"
+          --
+          DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+
+      - name: End Sonar scan
+        run: dotnet sonarscanner end /d:sonar.token="$SONAR_TOKEN"
