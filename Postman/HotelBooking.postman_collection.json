@@ -1,11 +1,106 @@
 {
 	"info": {
-		"_postman_id": "2e2b61e9-e27f-477b-860b-f842350fbcb0",
+		"_postman_id": "a413a027-67f2-4cad-9d1a-61067cd8cb9b",
 		"name": "HotelBooking_https",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "2647456"
+		"_exporter_id": "44188889"
 	},
 	"item": [
+		{
+			"name": "Create booking",
+			"item": [
+				{
+					"name": "POST /bookings (data-driven)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.sendRequest(pm.variables.replaceIn(\"{{baseUrl}}/bookings\"), (err, res) => {",
+									"    pm.variables.set(\"bookingsBefore\", err ? -1 : res.json().length);",
+									"});"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const id = pm.iterationData.get(\"id\");",
+									"const expected = Number(pm.iterationData.get(\"expectedStatus\"));",
+									"const saved = Number(pm.iterationData.get(\"saved\"));",
+									"const defect = pm.iterationData.get(\"defect\");",
+									"",
+									"// D16: a known defect is skipped, not deleted, so it stays in the report",
+									"const statusTest = defect ? pm.test.skip : pm.test;",
+									"statusTest(`${id}: status is ${expected}` + (defect ? ` — known defect ${defect}` : \"\"), () => {",
+									"    pm.response.to.have.status(expected);",
+									"});",
+									"",
+									"// Persistence: not skipped for D-3 rows. Even with a 500, nothing may be stored.",
+									"pm.sendRequest(pm.variables.replaceIn(\"{{baseUrl}}/bookings\"), (err, res) => {",
+									"    pm.test(`${id}: number of new bookings is ${saved}`, () => {",
+									"        pm.expect(err).to.be.null;",
+									"        const before = Number(pm.variables.get(\"bookingsBefore\"));",
+									"        pm.expect(res.json().length).to.eql(before + saved);",
+									"    });",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"startDate\": \"{{startDate}}\",\n  \"endDate\": \"{{endDate}}\",\n  \"customerId\": 1\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/bookings",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bookings"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"// \"day N\" = today + N days, the same offsets as Steps 1 and 2.",
+							"// Local date, not toISOString(): that is UTC and shifts the day near midnight.",
+							"function day(offset) {",
+							"    const d = new Date();",
+							"    d.setDate(d.getDate() + Number(offset));",
+							"    const pad = n => String(n).padStart(2, \"0\");",
+							"    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;",
+							"}",
+							"",
+							"// Only set when the run has a data file (Collection Runner / Newman)",
+							"if (pm.iterationData.has(\"start\")) {",
+							"    pm.variables.set(\"startDate\", day(pm.iterationData.get(\"start\")));",
+							"    pm.variables.set(\"endDate\", day(pm.iterationData.get(\"end\")));",
+							"}"
+						]
+					}
+				}
+			]
+		},
 		{
 			"name": "rooms - Room 1",
 			"event": [
@@ -269,6 +364,12 @@
 				}
 			},
 			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://localhost:5001"
 		}
 	]
 }
