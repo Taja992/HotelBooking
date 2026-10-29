@@ -401,3 +401,4 @@ FodyWeavers.xsd
 CLAUDE.md
 CLAUDE.local.md
 .claude/
+*.feature.cs
