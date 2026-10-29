@@ -1,0 +1,4 @@
+{
+  "cucumber.features": ["HotelBooking.Specs/Features/**/*.feature"],
+  "cucumber.glue": ["HotelBooking.Specs/StepDefinitions/**/*.cs"]
+}
