@@ -396,3 +396,8 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Claude Code (local AI tooling config, not shared)
+CLAUDE.md
+CLAUDE.local.md
+.claude/
