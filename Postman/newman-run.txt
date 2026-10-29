@@ -1,0 +1,168 @@
+newman
+
+HotelBooking_https
+
+Iteration 1/16
+
+Folder Create booking
+Sub-folder POST /bookings (data-driven)
+  GET https://localhost:5001/bookings [200 OK, 825B, 212ms]
+  POST https://localhost:5001/bookings [201 Created, 140B, 82ms]
+  Pass  TC1: status is 201
+  GET https://localhost:5001/bookings [200 OK, 1.04kB, 7ms]
+  Pass  TC1: number of new bookings is 1
+
+Iteration 2/16
+
+Sub-folder POST /bookings (data-driven)
+  GET https://localhost:5001/bookings [200 OK, 1.04kB, 3ms]
+  POST https://localhost:5001/bookings [201 Created, 140B, 3ms]
+  Pass  TC2: status is 201
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 3ms]
+  Pass  TC2: number of new bookings is 1
+
+Iteration 3/16
+
+Sub-folder POST /bookings (data-driven)
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 3ms]
+  POST https://localhost:5001/bookings [409 Conflict, 232B, 2ms]
+  Pass  TC3: status is 409
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 3ms]
+  Pass  TC3: number of new bookings is 0
+
+Iteration 4/16
+
+Sub-folder POST /bookings (data-driven)
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 3ms]
+  POST https://localhost:5001/bookings [409 Conflict, 232B, 2ms]
+  Pass  TC4: status is 409
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 2ms]
+  Pass  TC4: number of new bookings is 0
+
+Iteration 5/16
+
+Sub-folder POST /bookings (data-driven)
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 7ms]
+  POST https://localhost:5001/bookings [409 Conflict, 232B, 3ms]
+  Pass  TC5: status is 409
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 2ms]
+  Pass  TC5: number of new bookings is 0
+
+Iteration 6/16
+
+Sub-folder POST /bookings (data-driven)
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 2ms]
+  POST https://localhost:5001/bookings [409 Conflict, 232B, 3ms]
+  Pass  TC6: status is 409
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 2ms]
+  Pass  TC6: number of new bookings is 0
+
+Iteration 7/16
+
+Sub-folder POST /bookings (data-driven)
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 3ms]
+  POST https://localhost:5001/bookings [409 Conflict, 232B, 2ms]
+  Pass  TC7: status is 409
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 2ms]
+  Pass  TC7: number of new bookings is 0
+
+Iteration 8/16
+
+Sub-folder POST /bookings (data-driven)
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 3ms]
+  POST https://localhost:5001/bookings [409 Conflict, 232B, 2ms]
+  Pass  TC8: status is 409
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 2ms]
+  Pass  TC8: number of new bookings is 0
+
+Iteration 9/16
+
+Sub-folder POST /bookings (data-driven)
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 2ms]
+  POST https://localhost:5001/bookings [409 Conflict, 232B, 3ms]
+  Pass  TC9: status is 409
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 2ms]
+  Pass  TC9: number of new bookings is 0
+
+Iteration 10/16
+
+Sub-folder POST /bookings (data-driven)
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 3ms]
+  POST https://localhost:5001/bookings [409 Conflict, 232B, 2ms]
+  Pass  TC10: status is 409
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 2ms]
+  Pass  TC10: number of new bookings is 0
+
+Iteration 11/16
+
+Sub-folder POST /bookings (data-driven)
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 3ms]
+  POST https://localhost:5001/bookings [500 Internal Server Error, 3.3kB, 17ms]
+  -  [skipped] V1: status is 400 ΓÇö known defect D-3
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 3ms]
+  Pass  V1: number of new bookings is 0
+
+Iteration 12/16
+
+Sub-folder POST /bookings (data-driven)
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 2ms]
+  POST https://localhost:5001/bookings [500 Internal Server Error, 3.3kB, 3ms]
+  -  [skipped] V2: status is 400 ΓÇö known defect D-3
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 2ms]
+  Pass  V2: number of new bookings is 0
+
+Iteration 13/16
+
+Sub-folder POST /bookings (data-driven)
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 2ms]
+  POST https://localhost:5001/bookings [500 Internal Server Error, 3.3kB, 2ms]
+  -  [skipped] V3: status is 400 ΓÇö known defect D-3
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 2ms]
+  Pass  V3: number of new bookings is 0
+
+Iteration 14/16
+
+Sub-folder POST /bookings (data-driven)
+  GET https://localhost:5001/bookings [200 OK, 1.25kB, 2ms]
+  POST https://localhost:5001/bookings [201 Created, 140B, 3ms]
+  Pass  V4: status is 201
+  GET https://localhost:5001/bookings [200 OK, 1.47kB, 3ms]
+  Pass  V4: number of new bookings is 1
+
+Iteration 15/16
+
+Sub-folder POST /bookings (data-driven)
+  GET https://localhost:5001/bookings [200 OK, 1.47kB, 3ms]
+  POST https://localhost:5001/bookings [500 Internal Server Error, 3.3kB, 4ms]
+  -  [skipped] V5: status is 400 ΓÇö known defect D-3
+  GET https://localhost:5001/bookings [200 OK, 1.47kB, 3ms]
+  Pass  V5: number of new bookings is 0
+
+Iteration 16/16
+
+Sub-folder POST /bookings (data-driven)
+  GET https://localhost:5001/bookings [200 OK, 1.47kB, 2ms]
+  POST https://localhost:5001/bookings [500 Internal Server Error, 3.3kB, 4ms]
+  -  [skipped] V6: status is 400 ΓÇö known defect D-3
+  GET https://localhost:5001/bookings [200 OK, 1.47kB, 2ms]
+  Pass  V6: number of new bookings is 0
+
+-----------------------------------------------------------------
+|                         |         executed |           failed |
+--------------------------+------------------+-------------------
+|              iterations |               16 |                0 |
+--------------------------+------------------+-------------------
+|                requests |               48 |                0 |
+--------------------------+------------------+-------------------
+|            test-scripts |               16 |                0 |
+--------------------------+------------------+-------------------
+|      prerequest-scripts |               32 |                0 |
+--------------------------+------------------+-------------------
+|              assertions |               32 |                0 |
+-----------------------------------------------------------------
+| total run duration: 2.2s                                      |
+-----------------------------------------------------------------
+| total data received: 51.95kB (approx)                         |
+-----------------------------------------------------------------
+| average response time: 9ms [min: 2ms, max: 212ms, s.d.: 31ms] |
+-----------------------------------------------------------------

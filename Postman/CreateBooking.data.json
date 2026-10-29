@@ -1,0 +1,18 @@
+[
+  { "id": "TC1",  "technique": "DT B-B",              "start": 1,  "end": 3,  "expectedStatus": 201, "saved": 1 },
+  { "id": "TC2",  "technique": "DT A-A",              "start": 19, "end": 19, "expectedStatus": 201, "saved": 1 },
+  { "id": "TC3",  "technique": "DT B-A",              "start": 3,  "end": 19, "expectedStatus": 409, "saved": 0 },
+  { "id": "TC4",  "technique": "DT B-O",              "start": 3,  "end": 4,  "expectedStatus": 409, "saved": 0 },
+  { "id": "TC5",  "technique": "DT B-O",              "start": 3,  "end": 18, "expectedStatus": 409, "saved": 0 },
+  { "id": "TC6",  "technique": "DT O-A",              "start": 4,  "end": 19, "expectedStatus": 409, "saved": 0 },
+  { "id": "TC7",  "technique": "DT O-A",              "start": 18, "end": 19, "expectedStatus": 409, "saved": 0 },
+  { "id": "TC8",  "technique": "DT O-O",              "start": 4,  "end": 4,  "expectedStatus": 409, "saved": 0 },
+  { "id": "TC9",  "technique": "DT O-O",              "start": 4,  "end": 18, "expectedStatus": 409, "saved": 0 },
+  { "id": "TC10", "technique": "DT O-O",              "start": 18, "end": 18, "expectedStatus": 409, "saved": 0 },
+  { "id": "V1",   "technique": "BVT start is today",  "start": 0,  "end": 5,  "expectedStatus": 400, "saved": 0, "defect": "D-3" },
+  { "id": "V2",   "technique": "BVT start yesterday", "start": -1, "end": 5,  "expectedStatus": 400, "saved": 0, "defect": "D-3" },
+  { "id": "V3",   "technique": "ECT period in past",  "start": -5, "end": -1, "expectedStatus": 400, "saved": 0, "defect": "D-3" },
+  { "id": "V4",   "technique": "BVT tomorrow, 1 day", "start": 1,  "end": 1,  "expectedStatus": 201, "saved": 1 },
+  { "id": "V5",   "technique": "BVT start = end + 1", "start": 6,  "end": 5,  "expectedStatus": 400, "saved": 0, "defect": "D-3" },
+  { "id": "V6",   "technique": "ECT start A, end B",  "start": 19, "end": 3,  "expectedStatus": 400, "saved": 0, "defect": "D-3" }
+]
