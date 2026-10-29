@@ -34,4 +34,11 @@
     <ProjectReference Include="..\HotelBooking.Core\HotelBooking.Core.csproj" />
     <ProjectReference Include="..\HotelBooking.Infrastructure\HotelBooking.Infrastructure.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <!-- One source of truth for the black-box test cases -->
+    <Compile Include="..\HotelBooking.UnitTests\TestData\CreateBookingTestCases.cs"
+             Link="TestData\CreateBookingTestCases.cs" />
+  </ItemGroup>
+
 </Project>
