@@ -401,3 +401,6 @@ FodyWeavers.xsd
 CLAUDE.md
 CLAUDE.local.md
 .claude/
+
+# Reqnroll generated code-behind
+*.feature.cs
