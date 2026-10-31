@@ -66,9 +66,18 @@ namespace HotelBooking.E2ETests
                         .Equals("/Bookings", StringComparison.OrdinalIgnoreCase))
                     return true;
 
-                // FindElements (plural) does not trigger implicit wait — returns immediately
-                var els = driver.FindElements(By.CssSelector("h4.text-danger"));
-                return els.Count > 0 && !string.IsNullOrWhiteSpace(els[0].Text);
+                // FindElements (plural) does not trigger implicit wait — returns immediately.
+                // Catch StaleElementReferenceException: on slow CI runners the page can
+                // navigate away between FindElements and reading .Text — retry on next poll.
+                try
+                {
+                    var els = driver.FindElements(By.CssSelector("h4.text-danger"));
+                    return els.Count > 0 && !string.IsNullOrWhiteSpace(els[0].Text);
+                }
+                catch (StaleElementReferenceException)
+                {
+                    return false;
+                }
             });
 
             return new Uri(_driver.Url).AbsolutePath
