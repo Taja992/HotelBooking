@@ -62,6 +62,7 @@ namespace HotelBooking.E2ETests
         {
             try { _process?.Kill(entireProcessTree: true); } catch { }
             _process?.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

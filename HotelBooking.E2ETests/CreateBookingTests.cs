@@ -19,7 +19,7 @@ namespace HotelBooking.E2ETests
         private const int OccupiedEnd   = 18;  // matches DbInitializer: today+4+14
 
         private readonly WebAppFactory      _factory;
-        private readonly IWebDriver         _driver;
+        private readonly ChromeDriver       _driver;
         private readonly CreateBookingPage  _createPage;
         private readonly BookingsListPage   _listPage;
 
@@ -39,7 +39,11 @@ namespace HotelBooking.E2ETests
             _listPage   = new BookingsListPage(_driver, _factory.BaseAddress);
         }
 
-        public void Dispose() => _driver.Quit();
+        public void Dispose()
+        {
+            _driver.Quit();
+            GC.SuppressFinalize(this);
+        }
 
         // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -207,31 +211,31 @@ namespace HotelBooking.E2ETests
 
         // ── V1–V3, V5, V6: defect D-4 (invalid dates crash the page) ─────────────────
 
-        [Fact(Skip = "Defect D-4: invalid dates cause unhandled ArgumentException (page crashes)")]
+        [Fact(Skip = "Defect D-4: invalid dates cause unhandled ArgumentException (page crashes)")] // NOSONAR
         public void V1_StartToday_PageCrashes_D4()
         {
             TryBook(startOffset: 0, endOffset: 5);
         }
 
-        [Fact(Skip = "Defect D-4: invalid dates cause unhandled ArgumentException (page crashes)")]
+        [Fact(Skip = "Defect D-4: invalid dates cause unhandled ArgumentException (page crashes)")] // NOSONAR
         public void V2_StartYesterday_PageCrashes_D4()
         {
             TryBook(startOffset: -1, endOffset: 5);
         }
 
-        [Fact(Skip = "Defect D-4: invalid dates cause unhandled ArgumentException (page crashes)")]
+        [Fact(Skip = "Defect D-4: invalid dates cause unhandled ArgumentException (page crashes)")] // NOSONAR
         public void V3_WholePeriodInPast_PageCrashes_D4()
         {
             TryBook(startOffset: -5, endOffset: -1);
         }
 
-        [Fact(Skip = "Defect D-4: invalid dates cause unhandled ArgumentException (page crashes)")]
+        [Fact(Skip = "Defect D-4: invalid dates cause unhandled ArgumentException (page crashes)")] // NOSONAR
         public void V5_StartAfterEnd_PageCrashes_D4()
         {
             TryBook(startOffset: 6, endOffset: 5);
         }
 
-        [Fact(Skip = "Defect D-4: invalid dates cause unhandled ArgumentException (page crashes)")]
+        [Fact(Skip = "Defect D-4: invalid dates cause unhandled ArgumentException (page crashes)")] // NOSONAR
         public void V6_InvertedFutureDates_PageCrashes_D4()
         {
             TryBook(startOffset: OccupiedEnd + 1, endOffset: OccupiedStart - 1);

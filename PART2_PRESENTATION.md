@@ -115,7 +115,3 @@ Total tests: 16
 **Two small additions to `HotelBooking.Mvc/Program.cs`:**
 1. `if (!app.Environment.IsDevelopment()) app.UseHttpsRedirection();`  
    — Prevents an HTTP→HTTPS redirect loop when the test server runs on plain HTTP.
-2. `public partial class Program { }`  
-   — Makes the entry point visible to the test assembly.
-
-Neither change affects normal development or production behavior.
